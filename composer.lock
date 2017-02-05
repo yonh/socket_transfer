@@ -1,0 +1,51 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "a9aa88a9729952a99489600cc1730144",
+    "packages": [
+        {
+            "name": "yonh/php-functions",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yonh/php-functions.git",
+                "reference": "a89303c22b3a0fbffb2fa061b21fd838efef354e"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://127.0.0.1:3080/dist/yonh/php-functions/yonh-php-functions-dev-master-67699d.tar",
+                "reference": "a89303c22b3a0fbffb2fa061b21fd838efef354e",
+                "shasum": "d2936922ddfb2fee4a1320bc1561515517caa717"
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "authors": [
+                {
+                    "name": "yonh",
+                    "email": "azssjli@163.com"
+                }
+            ],
+            "time": "2017-02-05T03:51:41+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "yonh/php-functions": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

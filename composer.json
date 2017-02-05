@@ -1,0 +1,29 @@
+{
+    "name": "yonh/socket-transfer",
+    "description": "socket文件传输",
+    "type": "Branch: master",
+    "license": "socket_transfer",
+    "repositories": [{
+        "type": "composer",
+        "url": "http://127.0.0.1:3080"
+    }],
+    "config":{
+        "secure-http":false
+    },
+    "authors": [
+        {
+            "name": "yonh",
+            "email": "azssjli@163.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "classmap": [
+            "src"
+        ]
+    },
+
+    "require": {
+        "yonh/php-functions": "dev-master"
+    }
+}
