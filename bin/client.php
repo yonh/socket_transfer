@@ -17,8 +17,31 @@ require_once __DIR__ . "/_init_config.php";
 //echo "dir:" . $config->getDir();
 
 
-
 $client = $serviceManage->getClient();
+$server_hash = $client->getFingerprint();
 
-$client->send();
-//$client->getFingerprint();
+
+$hash_keys = array_keys($server_hash);
+
+$fhh = new FileHashHelper($serviceManage->getClientConfig()->getDir());
+$local_hash = $fhh->generate_hash_array();
+
+foreach ($local_hash as $k=>$hash) {
+	if (in_array($k, $hash_keys)) {
+
+		if ($hash['hash'] != $server_hash[$k]['hash']) {
+			//echo $hash['hash'];
+			$client->send($serviceManage->getClientConfig()->getDir() . $hash['file'], $hash['file']);
+		} else {
+			//echo "equals\n";
+		}
+	} else {
+		$client->send($serviceManage->getClientConfig()->getDir() . $hash['file'], $hash['file']);
+	}
+
+	//usleep(10);
+}
+
+
+
+//$client->send( "/home/yonh/git/socket_transfer/bin/_init_config.php", "/a.php");

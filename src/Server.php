@@ -204,7 +204,7 @@ class Server
 //				socket_close($connection);
 			}
 		}
-		socket_close($socket);
+		@socket_close($socket);
 	}
 
 	/**
