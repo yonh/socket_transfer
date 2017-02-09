@@ -25,6 +25,8 @@ class ServiceManager
 
 		$server = new Server($config->getIp(), $config->getPort(), 3600, $config->getKey());
 		$server->setFileHashHelper(new FileHashHelper($config->getDir()));
+		$server->setConfig($config);
+		$server->setFileHelper(new FileHelper());
 
 		return $server;
 	}

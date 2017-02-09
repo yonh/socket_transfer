@@ -38,6 +38,7 @@ class Client
 		} else {
 			fwrite($fp, "file".$this->separator);
 			fwrite($fp, $filename.$this->separator);
+			fwrite($fp, md5_file($filename).$this->separator);
 			$out = file_get_contents($filename);//read data in once
 			$out = base64_encode($out);
 			echo $out;

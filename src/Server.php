@@ -15,6 +15,10 @@ class Server
 
 	/** @var  FileHashHelper */
 	private $fileHashHelper;
+	/** @var  FileHelper */
+	private $fileHelper;
+
+	private $config;
 
 	public function __construct($ip, $port, $run_time, $token)
 	{
@@ -41,10 +45,18 @@ class Server
 
 	private function file($data)
 	{
+		// todo 保存文件 done
+		// todo 校验文件 done
+		// todo 替换文件 done
+		// todo 创建不存在的目录 done
+
 		echo "echo file\n";
 
+		print_r($data);
+
 		$file_name = $data[1];
-		$file_contents = $data[2];
+		$hash = $data[2];
+		$file_contents = $data[3];
 		$path = "/tmp/socket_transfer/";
 		$file_addr = $path . basename($file_name) . ".bak";
 		$fp        = fopen($file_addr, "wb"); //create new file
@@ -53,6 +65,17 @@ class Server
 		} else {
 			fwrite($fp, base64_decode($file_contents));
 		}
+
+		if (md5_file($file_addr) == $hash) {
+			$basedir = $this->config->getDir() . dirname($file_name);
+			echo "move file to " . $basedir . basename($file_name) . "\n";
+			$this->fileHelper->mkdirIfNotExists($this->config->getDir() . dirname($file_name));
+
+			return rename($file_addr, $basedir . "/" . basename($file_name));
+		} else {
+			echo "file verify fail.";
+		}
+		echo "\n";
 	}
 
 	public function listen()
@@ -65,18 +88,15 @@ class Server
 		socket_bind($socket, $this->ip, (int)$this->port);
 		socket_listen($socket);
 
-		echo "server listen " . $this->ip . ":" . $this->port . "...";
+		echo "server listen " . $this->ip . ":" . $this->port . "...\n";
 
 		while (true) {
 
 			$connection = socket_accept($socket);
 			if ($connection) {
-				//$timer = new timer();
-				//$timer->start();
+
 
 				$buffer = '';
-				$begin  = TRUE;
-
 
 				$tmp_file = "/tmp/rev";
 				file_put_contents($tmp_file, '');
@@ -201,6 +221,38 @@ class Server
 	public function setFileHashHelper($fileHashHelper)
 	{
 		$this->fileHashHelper = $fileHashHelper;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getConfig()
+	{
+		return $this->config;
+	}
+
+	/**
+	 * @param mixed $config
+	 */
+	public function setConfig($config)
+	{
+		$this->config = $config;
+	}
+
+	/**
+	 * @return FileHelper
+	 */
+	public function getFileHelper()
+	{
+		return $this->fileHelper;
+	}
+
+	/**
+	 * @param FileHelper $fileHelper
+	 */
+	public function setFileHelper($fileHelper)
+	{
+		$this->fileHelper = $fileHelper;
 	}
 
 
