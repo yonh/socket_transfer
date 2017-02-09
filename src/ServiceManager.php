@@ -9,9 +9,32 @@
 class ServiceManager
 {
 	/**
-	 * @return Config
+	 * @return \Config\Config
 	 */
-	public function getConfig() {
-		return new Config(__DIR__ . "/../config.json");
+	public function getServerConfig() {
+		return new \Config\Config(__DIR__ . "/../s_config.json");
 	}
+
+	public function getClientConfig() {
+		return new \Config\Config(__DIR__ . "/../c_config.json");
+	}
+
+	/** @return Server */
+	public function getServer() {
+		$config = $this->getServerConfig();
+
+		$server = new Server($config->getIp(), $config->getPort(), 3600, $config->getKey());
+		$server->setFileHashHelper(new FileHashHelper($config->getDir()));
+
+		return $server;
+	}
+
+	public function getClient() {
+		$config = $this->getClientConfig();
+
+		return new Client($config->getIp(), $config->getPort(), $config->getKey());
+	}
+
+
+
 }

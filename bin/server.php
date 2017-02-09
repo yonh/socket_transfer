@@ -7,3 +7,11 @@
  */
 require_once __DIR__ . '/../vendor/autoload.php';
 
+$serviceManage = new ServiceManager();
+$config = $serviceManage->getServerConfig();
+
+require_once __DIR__ . "/_init_config.php";
+
+
+$server = $serviceManage->getServer();
+$server->listen();

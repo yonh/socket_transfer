@@ -1,3 +1,4 @@
 /vendor/
 /.idea/
-/config.json
+/s_config.json
+/c_config.json

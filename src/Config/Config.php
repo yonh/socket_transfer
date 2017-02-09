@@ -1,4 +1,5 @@
 <?php
+namespace Config;
 
 /**
  * Created by PhpStorm.
@@ -9,13 +10,15 @@
 class Config
 {
 	private $config_file;
-	private $config_data = null;
+	public $config_data = null;
 	private $fileHelper = null;
 
 	public function __construct($config_file)
 	{
 		$this->config_file = $config_file;
-		$this->fileHelper = new FileHelper();
+		$this->fileHelper = new \FileHelper();
+
+		$this->reload_config_data();
 	}
 
 	public function check()
@@ -29,14 +32,27 @@ class Config
 	public function create_config() {
 		$key = $this->prompt_get_when_empty_exit("密钥");
 		$dir = $this->prompt_get_when_empty_exit("目录");
+		$ip = $this->prompt_get_when_empty_exit("监听IP");
+		$port = $this->prompt_get_when_empty_exit("监听端口");
 
 		$json = array(
 			'key'=>$key,
-			'dir'=>$dir
+			'dir'=>$dir,
+			'ip'=>$ip,
+			'port'=>$port,
 		);
 
 		if (!file_exists($dir)) {
 			echo "目录不存在,程序退出";
+			die;
+		}
+		if (!intval($port)) {
+			echo "端口异常,程序退出";
+			die;
+		}
+
+		if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
+			echo "IP异常,程序退出";
 			die;
 		}
 
@@ -96,9 +112,21 @@ class Config
 		return $this->getConfigValue('dir');
 	}
 
+	public function getPort() {
+		return $this->getConfigValue('port');
+	}
+
+	public function getIp() {
+		return $this->getConfigValue('ip');
+	}
+
 	public function reload_config_data() {
 		if ($this->fileHelper->file_exists($this->config_file)) {
 			$this->config_data = json_decode(file_get_contents($this->config_file), true);
 		}
 	}
+
+
+
+
 }
