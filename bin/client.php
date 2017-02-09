@@ -20,5 +20,5 @@ require_once __DIR__ . "/_init_config.php";
 
 $client = $serviceManage->getClient();
 
-//$client->send();
-$client->getFingerprint();
+$client->send();
+//$client->getFingerprint();

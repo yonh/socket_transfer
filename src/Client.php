@@ -29,20 +29,24 @@ class Client
 
 	public function send() {
 		//define("SEPARATOR", "|=+=|");//used for explode filename and contents
-//client
+
 		$start = time();
 		$filename =  "/home/yonh/git/socket_transfer/bin/_init_config.php";
 		$fp = fsockopen($this->ip, $this->port, $errno, $errstr, 30);
 		if (!$fp) {
 			echo "$errstr ($errno)<br />/n";
 		} else {
+			fwrite($fp, "file".$this->separator);
 			fwrite($fp, $filename.$this->separator);
 			$out = file_get_contents($filename);//read data in once
+			$out = base64_encode($out);
+			echo $out;
+			echo "\n";
 			fwrite($fp, $out);
 		}
 
 
-		echo md5_file($filename);//"a.zip") . PHP_EOL;
+		echo md5_file($filename);
 
 		$end = time();
 		echo 'time:' . ($end - $start);
