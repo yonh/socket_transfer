@@ -31,6 +31,9 @@ class ServiceManager
 		return $server;
 	}
 
+	/**
+	 * @return Client
+	 */
 	public function getClient() {
 		$config = $this->getClientConfig();
 

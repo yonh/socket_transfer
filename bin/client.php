@@ -16,32 +16,60 @@ require_once __DIR__ . "/_init_config.php";
 //echo "key:" . $config->getKey() . PHP_EOL;
 //echo "dir:" . $config->getDir();
 
+$success = 0;
+$fail = 0;
+$time = time();
 
-$client = $serviceManage->getClient();
-$server_hash = $client->getFingerprint();
+	$client = $serviceManage->getClient();
+	$server_hash = $client->getFingerprint();
+
+	//print_r($server_hash);die;
 
 
-$hash_keys = array_keys($server_hash);
+	$hash_keys = array_keys($server_hash);
 
-$fhh = new FileHashHelper($serviceManage->getClientConfig()->getDir());
-$local_hash = $fhh->generate_hash_array();
+	$fhh = new FileHashHelper($serviceManage->getClientConfig()->getDir());
+	$local_hash = $fhh->generate_hash_array();
 
-foreach ($local_hash as $k=>$hash) {
-	if (in_array($k, $hash_keys)) {
 
-		if ($hash['hash'] != $server_hash[$k]['hash']) {
-			//echo $hash['hash'];
-			$client->send($serviceManage->getClientConfig()->getDir() . $hash['file'], $hash['file']);
+
+
+
+	foreach ($local_hash as $k=>$hash) {
+
+		if (in_array($k, $hash_keys)) {
+
+			if ($hash['hash'] != $server_hash[$k]['hash']) {
+				usleep(30000);
+				echo $hash['hash'] . "    " . $server_hash[$k]['hash'];
+				$result = $client->send($serviceManage->getClientConfig()->getDir() . $hash['file'], $hash['file']);
+				if ($result) {
+					$success++;
+				} else {
+					$fail++;
+				}
+
+			} else {
+				//echo "equals\n";
+			}
 		} else {
-			//echo "equals\n";
+			usleep(30000);
+			//usleep(15000);
+			//echo $hash['file'] . $hash['hash'] . "    " . $server_hash[$k]['hash'];
+			if ($client->send($serviceManage->getClientConfig()->getDir() . $hash['file'], $hash['file'])) {
+				$success++;
+			} else {
+				$fail++;
+			}
 		}
-	} else {
-		$client->send($serviceManage->getClientConfig()->getDir() . $hash['file'], $hash['file']);
+		//sleep(1);
 	}
 
-	//usleep(10);
-}
 
 
+echo "send files:" . ($success + $fail) . "\n";
+echo "success files:" . $success . "\n";
+echo "fail files:" . $fail . "\n";
+echo "time:" . (time() - $time) . "\n";
 
 //$client->send( "/home/yonh/git/socket_transfer/bin/_init_config.php", "/a.php");

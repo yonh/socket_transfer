@@ -27,6 +27,7 @@ class FileHashHelper
 			$filename = $file->getFilename();
 			$fullname = $file->getPathname();
 			$rel = $this->relativelyDirname($fullname, $this->folder);
+			$rel = str_replace("\\", "/", $rel);
 
 			if ($filename == '..' || $filename == '.') {
 				continue;

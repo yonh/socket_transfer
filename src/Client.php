@@ -8,6 +8,7 @@
  */
 class Client
 {
+
 	private $port;
 	private $ip;
 	private $token;
@@ -26,15 +27,18 @@ class Client
 		$this->port = $port;
 		$this->token = $token;
 	}
-	public function send2($send_file, $filename) {
+	// fwrite方式发送
+	public function send($send_file, $filename) {
+
 		//define("SEPARATOR", "|=+=|");//used for explode filename and contents
 
-		$start = time();
+		//$start = time();
 		//$filename =  "/home/yonh/git/socket_transfer/bin/_init_config.php";
 		$fp = fsockopen($this->ip, $this->port, $errno, $errstr, 30);
 		if (!$fp) {
 			echo "$errstr ($errno)<br />/n";
 		} else {
+			echo "send file: " . escapeshellcmd($send_file) . "\n";
 			fwrite($fp, "file".$this->separator);
 			fwrite($fp, $filename.$this->separator);
 			fwrite($fp, md5_file($send_file).$this->separator);
@@ -42,16 +46,20 @@ class Client
 			$out = base64_encode($out);
 			//echo $out . "\n";
 			fwrite($fp, $out);
-
 		}
 
+		if (@fclose($fp)) {
+			return true;
+		} else {
+			return false;
+		}
 		//echo md5_file($send_file);
 
-		$end = time();
-		echo 'time:' . ($end - $start);
+		//$end = time();
+		//echo 'time:' . ($end - $start);
 	}
-
-	public function send($send_file, $filename) {
+	//socket方式发送
+	public function send2($send_file, $filename) {
 
 		//define("SEPARATOR", "|=+=|");//used for explode filename and contents
 
@@ -65,7 +73,7 @@ class Client
 		if (!$result) {
 			echo "socket error \n";
 		} else {
-			echo "send file: " . escapeshellcmd($send_file) . "\n";
+			//echo "send file: " . escapeshellcmd($send_file) . "\n";
 			socket_write($socket, "file".$this->separator);
 			socket_write($socket, $filename.$this->separator);
 			socket_write($socket, md5_file($send_file).$this->separator);
@@ -74,7 +82,6 @@ class Client
 			$out = base64_encode($out);
 			//echo $out . "\n";
 			socket_write($socket, $out);
-
 		}
 
 		@socket_close($socket);
@@ -105,7 +112,7 @@ class Client
 		$hash_file = __DIR__ . "/hash.json";
 
 
-		while ($out = socket_read($socket, 8192)) {
+		while ($out = socket_read($socket, 10240)) {
 
 			if (endsWith($out, trim($this->separator))) {
 				$out = str_replace($this->separator, "", $out);

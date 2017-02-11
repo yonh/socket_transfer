@@ -50,14 +50,18 @@ class Server
 		// todo 替换文件 done
 		// todo 创建不存在的目录 done
 
-		echo "echo file\n";
+		//echo "echo file\n";
 
-		print_r($data);
+		//print_r($data);
 
 		$file_name = $data[1];
 		$hash = $data[2];
 		$file_contents = $data[3];
 		$path = "/tmp/socket_transfer/";
+		$path = __DIR__ . "/tmp/";
+		$this->fileHelper->mkdirIfNotExists($path);
+
+
 		$file_addr = $path . basename($file_name) . ".bak";
 		$fp        = fopen($file_addr, "wb"); //create new file
 		if (!$fp) {
@@ -71,18 +75,18 @@ class Server
 			echo "move file to " . $basedir . basename($file_name) . "\n";
 			$this->fileHelper->mkdirIfNotExists($this->config->getDir() . dirname($file_name));
 
-			return rename($file_addr, $basedir . "/" . basename($file_name));
+			return copy($file_addr, $basedir . "/" . basename($file_name));
 		} else {
 			echo "file verify fail.";
 		}
-		echo "\n";
+
+		return false;
 	}
 
 	public function listen()
 	{
-
 		define("SEPARATOR", "|=+=|");//used for explode filename and contents
-		define("APP_RECV_PACK_SIZE", 1024 * 10);
+		define("APP_RECV_PACK_SIZE", 10240);
 		//server
 		$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		socket_bind($socket, $this->ip, (int)$this->port);
@@ -95,10 +99,9 @@ class Server
 			$connection = socket_accept($socket);
 			if ($connection) {
 
-
 				$buffer = '';
 
-				$tmp_file = "/tmp/rev";
+				$tmp_file = __DIR__ ."/recv.txt";
 				file_put_contents($tmp_file, '');
 
 				$action = "";
@@ -127,7 +130,7 @@ class Server
 						break;
 				}
 
-				socket_close($connection);
+				//@socket_close($connection);
 
 
 //				while(socket_recv($connection, $buffer, APP_RECV_PACK_SIZE, 0))
