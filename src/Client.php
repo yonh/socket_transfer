@@ -34,11 +34,24 @@ class Client
 
 		//$start = time();
 		//$filename =  "/home/yonh/git/socket_transfer/bin/_init_config.php";
-		$fp = fsockopen($this->ip, $this->port, $errno, $errstr, 30);
+		$fp = @fsockopen($this->ip, $this->port, $errno, $errstr, 30);
+
+		$repeat_times = 10;
+		while (true) {
+			if (!$fp && $repeat_times> 0) {
+				usleep(50000);
+				$fp = @fsockopen($this->ip, $this->port, $errno, $errstr, 30);
+				$repeat_times--;
+			} else {
+				break;
+			}
+		}
+
+
 		if (!$fp) {
-			echo "$errstr ($errno)<br />/n";
+			echo "$errstr ($errno)\n";
 		} else {
-			echo "send file: " . escapeshellcmd($send_file) . "\n";
+			echo "send file: " .escapeshellcmd($filename)  . " >>> ". escapeshellcmd($send_file) . "\n";
 			fwrite($fp, "file".$this->separator);
 			fwrite($fp, $filename.$this->separator);
 			fwrite($fp, md5_file($send_file).$this->separator);
@@ -58,6 +71,7 @@ class Client
 		//$end = time();
 		//echo 'time:' . ($end - $start);
 	}
+
 	//socket方式发送
 	public function send2($send_file, $filename) {
 

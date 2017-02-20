@@ -33,15 +33,19 @@ $time = time();
 
 
 
+	//500->88 ->0f
+	//250->90 ->16f
+	//300->90 ->28f
+	//400->89 ->2f
 
-
+	$sleepMicro = 5000;
 	foreach ($local_hash as $k=>$hash) {
 
 		if (in_array($k, $hash_keys)) {
 
 			if ($hash['hash'] != $server_hash[$k]['hash']) {
-				usleep(30000);
-				echo $hash['hash'] . "    " . $server_hash[$k]['hash'];
+				usleep($sleepMicro);
+				//echo $hash['hash'] . "    " . $server_hash[$k]['hash'];
 				$result = $client->send($serviceManage->getClientConfig()->getDir() . $hash['file'], $hash['file']);
 				if ($result) {
 					$success++;
@@ -53,7 +57,7 @@ $time = time();
 				//echo "equals\n";
 			}
 		} else {
-			usleep(30000);
+			usleep($sleepMicro);
 			//usleep(15000);
 			//echo $hash['file'] . $hash['hash'] . "    " . $server_hash[$k]['hash'];
 			if ($client->send($serviceManage->getClientConfig()->getDir() . $hash['file'], $hash['file'])) {
