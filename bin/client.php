@@ -38,7 +38,7 @@ $time = time();
 	//300->90 ->28f
 	//400->89 ->2f
 
-	$sleepMicro = 5000;
+	$sleepMicro = 1500; // last best 5000
 	foreach ($local_hash as $k=>$hash) {
 
 		if (in_array($k, $hash_keys)) {

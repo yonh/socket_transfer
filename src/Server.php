@@ -43,6 +43,15 @@ class Server
 		socket_write($connection, SEPARATOR);
 	}
 
+	private function copy_test() {
+		//copy($src, $dest);
+	}
+
+	/**
+	 * 保存文件
+	 * @param $data
+	 * @return bool
+	 */
 	private function file($data)
 	{
 		// todo 保存文件 done
@@ -127,6 +136,9 @@ class Server
 				switch ($data[0]) {
 					case 'file':
 						$this->file($data);
+						break;
+					case 'copy_test':
+						$this->copy_test();
 						break;
 				}
 
